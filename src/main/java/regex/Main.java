@@ -38,16 +38,20 @@ public class Main {
      * @return whether the string satisfies the password requirements
      */
     public static boolean checkForPassword(String str, int minLength) {
-        final boolean propertyOne = Pattern.matches("REPLACE WITH CORRECT REGEX", str);
-        // as needed, modify this code.
-        return propertyOne;
+        if (str == null || str.length() < minLength) {
+            return false;
+        }
+
+        // at least one lowercase
+        final boolean hasLower = Pattern.matches(".*[a-z].*", str);
+        // at least one uppercase
+        final boolean hasUpper = Pattern.matches(".*[A-Z].*", str);
+        // at least one digit
+        final boolean hasDigit = Pattern.matches(".*\\d.*", str);
+
+        return hasLower && hasUpper && hasDigit;
     }
 
-    // Method 2 for checking if a string conforms to a regex: using Matcher.find
-    // TODO: Modify this method to return a list of all email addresses contained in the
-    //       input string that end with "@mail.utoronto.ca" or "@utoronto.ca" with at least one
-    //       character before the "@" symbol. The email addresses should be in the order they
-    //       appear in the string.
 
     /**
      * Returns a list of email addresses that occur in a given string.
@@ -55,7 +59,8 @@ public class Main {
      * @return a list containing the email addresses in the string.
      */
     public static List<String> extractEmails(String str) {
-        final Pattern pattern = Pattern.compile("REPLACE WITH CORRECT REGEX");
+        // one or more allowed characters before @, and domain is either mail.utoronto.ca or utoronto.ca
+        final Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@(mail\\.utoronto\\.ca|utoronto\\.ca)");
         final Matcher matcher = pattern.matcher(str);
         final List<String> result = new ArrayList<>();
         while (matcher.find()) {
@@ -66,9 +71,7 @@ public class Main {
 
     // Method 3 for checking if a string conforms to a regex: using String.matches
 
-    // TODO: Modify this method to check whether or not the string contains the same capital letter
-    //       twice. For example "Amazing Apple" contains "A" twice. If the string does repeat the same
-    //       capital letter twice, the method should return true. Otherwise it should return false.
+
 
     /**
      * Checks whether a given string contains the same capital letter twice.
@@ -76,6 +79,7 @@ public class Main {
      * @return whether str contains the same capital letter twice.
      */
     public static boolean checkForDoubles(String str) {
-        return str.matches("replace with correct regex");
+        // .* any chars, capture a capital letter, then later the same capital again (backreference)
+        return str.matches(".*([A-Z]).*\\1.*");
     }
 }
